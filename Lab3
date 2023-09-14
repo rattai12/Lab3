@@ -1,0 +1,65 @@
+class CircularDeque:
+    def __init__(self, size=20):
+        self._max_size = size
+        self._L = [None] * size   # the elements are stored in a list
+        self._nb_elements = 0     # number of elements in the deque
+        self._head = 0            # refers to the current position of the first element
+
+    # Add an element to the beginning of the deque: update the head and the number of elements
+    def add_first(self, item):
+        if self._nb_elements % self._max_size == 0:
+            raise IndexError
+        else:
+            self._head = (self._head-1) % self._max_size
+            self._L[self._head] = item
+            self._nb_elements +=1
+            
+    # Add an element to the end of the deque: update the number of elements
+    def add_last(self, item):
+        if self._nb_elements == self._max_size:
+            raise IndexError("Deque is full")
+        tail = (self._head + self._nb_elements) % self._max_size
+        self._L[tail] = item
+        self._nb_elements += 1
+                
+
+    # Remove and return the first element of the deque: update the head and the number of elements
+    def remove_first(self):
+        if self._nb_elements == 0:
+            raise IndexError
+        item = self._L[self._head]
+        self._L[self._head] = None
+        self._head = (self._head + 1) % self._max_size
+        self._nb_elements -= 1
+        return item
+
+
+    # Remove and return the last element of the deque: update the number of elements
+    def remove_last(self):
+        if self._nb_elements == 0:
+            raise IndexError("Deque is empty")
+        tail = (self._head + self._nb_elements - 1) % self._max_size
+        item = self._L[tail]
+        self._L[tail] = None
+        self._nb_elements -= 1
+        return item
+
+
+
+if __name__ == '__main__':
+    deque = CircularDeque(5)
+    deque.add_first(2)
+    deque.add_last(3)
+    deque.add_first(1)
+    deque.add_last(4)
+    print(deque.remove_first())    # 1
+    print(deque.remove_first())    # 2
+    print(deque.remove_last())     # 4
+    print(deque.remove_last())     # 3
+
+    # Uncomment to get an IndexError
+    # deque.remove_first()
+
+    # Uncomment to get an IndexError
+    # for i in range(6):
+    #     deque.add_first(7)
